@@ -1,6 +1,11 @@
 # Task Manager Dashboard
 
-A responsive task management application built with React. Create and organize tasks, monitor progress, and identify overdue work through a visual dashboard.
+A responsive React application for organizing daily work and tracking
+task progress through a visual dashboard.
+
+Create and manage tasks, monitor status-based KPIs, and quickly identify
+overdue work. Tasks are saved automatically in your browser using
+localStorage, so your list remains available after refreshing the page.
 
 ## Features
 
@@ -36,13 +41,13 @@ A responsive task management application built with React. Create and organize t
 1. Clone your repository:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git clone https://github.com/meryembouaddi/react-task-dashboard.git
    ```
 
 2. Open the project directory:
 
    ```bash
-   cd YOUR_REPOSITORY
+cd react-task-dashboard
    ```
 
 3. Install dependencies:
@@ -62,6 +67,9 @@ A responsive task management application built with React. Create and organize t
    Vite, or `npm start` if it uses Create React App.
 
 5. Open the local address displayed in your terminal.
+## Preview
+
+![Task Manager Dashboard showing task statistics, progress, and overdue tasks](docs/dashboard.png)
 
 ## How to Use
 
@@ -152,8 +160,3 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the Oxlint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
-<<<<<<< HEAD
->>>>>>> ff9e1f0 (first commit)
-=======
-# TaskManager
->>>>>>> bab5027 (first commit)
