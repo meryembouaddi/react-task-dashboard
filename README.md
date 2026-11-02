@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Task Manager Dashboard
 
 A responsive task management application built with React. Create and organize tasks, monitor progress, and identify overdue work through a visual dashboard.
