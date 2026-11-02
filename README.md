@@ -138,8 +138,15 @@ This application does not require a backend or database.
 
 ## Possible Future Improvements
 
-- Search tasks by title.
-- Filter tasks by status or overdue state.
-- Add task priorities.
-- Export and import tasks.
 - Add user authentication and cloud synchronization.
+- Add task categories and tags.
+- Implement subtasks and recurring tasks.
+- Add a calendar view (daily, weekly, and monthly).
+- Implement notifications and deadline reminders.
+- Allow users to assign tasks to team members.
+- Add comments and file attachments to tasks.
+- Integrate a backend using Node.js and Express.
+- Use MongoDB to store and manage tasks.
+- Add dark mode.
+- Implement drag-and-drop task organization.
+- Export task reports in PDF and Excel formats.
