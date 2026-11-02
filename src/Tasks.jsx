@@ -33,7 +33,8 @@ const statuts = [
     }
 ];
 
-// Date locale au format AAAA-MM-JJ.
+const priorites = ["Basse", "Moyenne", "Haute"];
+
 function DateAujourdhui() {
     const date = new Date();
     const annee = date.getFullYear();
@@ -43,7 +44,30 @@ function DateAujourdhui() {
     return `${annee}-${mois}-${jour}`;
 }
 
-// Charger les tâches avant le premier affichage du composant.
+function NormaliserTache(tache) {
+    return {
+        Title: tache.Title,
+        DateDebut: tache.DateDebut || "",
+        DateFin: tache.DateFin || "",
+        Ressource: tache.Ressource || "",
+        Status: tache.Status,
+        Priorite: priorites.includes(tache.Priorite)
+            ? tache.Priorite
+            : "Moyenne"
+    };
+}
+
+function TacheValide(tache) {
+    return (
+        tache &&
+        typeof tache.Title === "string" &&
+        typeof tache.DateDebut === "string" &&
+        typeof tache.DateFin === "string" &&
+        typeof tache.Ressource === "string" &&
+        statuts.some((statut) => statut.valeur === tache.Status)
+    );
+}
+
 function ChargerTaches() {
     try {
         const sauvegarde = localStorage.getItem(STORAGE_KEY);
@@ -52,21 +76,11 @@ function ChargerTaches() {
 
         const taches = JSON.parse(sauvegarde);
 
-        const donneesValides =
-            Array.isArray(taches) &&
-            taches.every(
-                (tache) =>
-                    tache &&
-                    typeof tache.Title === "string" &&
-                    typeof tache.DateDebut === "string" &&
-                    typeof tache.DateFin === "string" &&
-                    typeof tache.Ressource === "string" &&
-                    statuts.some(
-                        (statut) => statut.valeur === tache.Status
-                    )
-            );
+        if (!Array.isArray(taches) || !taches.every(TacheValide)) {
+            return [];
+        }
 
-        return donneesValides ? taches : [];
+        return taches.map(NormaliserTache);
     } catch (erreur) {
         console.error("Erreur de chargement :", erreur);
         return [];
@@ -74,26 +88,34 @@ function ChargerTaches() {
 }
 
 export default function TaskManager() {
+    // Champs du formulaire
     const [Title, SetTitle] = useState("");
     const [DateDebut, SetDateDebut] = useState("");
     const [DateFin, SetDateFin] = useState("");
     const [Ressource, SetRessource] = useState("");
     const [Status, SetStatus] = useState("");
+    const [Priorite, SetPriorite] = useState("Moyenne");
 
+    // Liste des tâches
     const [Tasks, SetTasks] = useState(ChargerTaches);
     const [IndexModification, SetIndexModification] = useState(null);
 
+    // Date et sauvegarde
     const [Aujourdhui, SetAujourdhui] = useState(DateAujourdhui);
     const [ErreurSauvegarde, SetErreurSauvegarde] = useState("");
 
-    // Sauvegarde après chaque ajout, modification ou suppression.
+    // Recherche et filtres
+    const [Recherche, SetRecherche] = useState("");
+    const [FiltreStatus, SetFiltreStatus] = useState("all");
+    const [FiltreRetard, SetFiltreRetard] = useState("all");
+
+    // Sauvegarder les tâches dans le navigateur après chaque changement
     useEffect(() => {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(Tasks));
             SetErreurSauvegarde("");
         } catch (erreur) {
             console.error("Erreur de sauvegarde :", erreur);
-
             SetErreurSauvegarde(
                 "La sauvegarde a échoué. Les dernières modifications " +
                 "risquent d’être perdues après actualisation."
@@ -101,13 +123,13 @@ export default function TaskManager() {
         }
     }, [Tasks]);
 
-    // Actualiser les retards si la page reste ouverte après minuit.
+    // Actualiser la date lorsque la page reste ouverte
     useEffect(() => {
         function ActualiserDate() {
             SetAujourdhui(DateAujourdhui());
         }
 
-        const intervalle = window.setInterval(ActualiserDate, 1000);
+        const intervalle = window.setInterval(ActualiserDate, 60000);
         window.addEventListener("focus", ActualiserDate);
 
         return () => {
@@ -116,6 +138,7 @@ export default function TaskManager() {
         };
     }, []);
 
+    // Vérifier si une tâche est en retard
     function EstEnRetard(tache) {
         return (
             tache.Status !== "done" &&
@@ -124,6 +147,7 @@ export default function TaskManager() {
         );
     }
 
+    // Statistiques du graphique
     const dataStatuts = statuts.map((statut) => ({
         name: statut.nom,
         value: Tasks.filter(
@@ -143,15 +167,18 @@ export default function TaskManager() {
             ? 0
             : Math.round((NombreTerminees / Tasks.length) * 100);
 
+    // Réinitialiser le formulaire
     function AnnulerModification() {
         SetTitle("");
         SetDateDebut("");
         SetDateFin("");
         SetRessource("");
         SetStatus("");
+        SetPriorite("Moyenne");
         SetIndexModification(null);
     }
 
+    // Ajouter ou modifier une tâche
     function AjouterTache(e) {
         e.preventDefault();
 
@@ -162,6 +189,11 @@ export default function TaskManager() {
 
         if (!Status) {
             alert("Veuillez choisir un statut.");
+            return;
+        }
+
+        if (!priorites.includes(Priorite)) {
+            alert("Veuillez choisir une priorité valide.");
             return;
         }
 
@@ -178,7 +210,8 @@ export default function TaskManager() {
             DateDebut,
             DateFin,
             Ressource: Ressource.trim(),
-            Status
+            Status,
+            Priorite
         };
 
         if (IndexModification === null) {
@@ -194,6 +227,7 @@ export default function TaskManager() {
         AnnulerModification();
     }
 
+    // Supprimer une tâche
     function Supprimer(index) {
         SetTasks((anciennesTaches) =>
             anciennesTaches.filter((_, i) => i !== index)
@@ -209,6 +243,7 @@ export default function TaskManager() {
         }
     }
 
+    // Charger une tâche dans le formulaire pour modification
     function Modifier(index) {
         const Task = Tasks[index];
 
@@ -217,7 +252,105 @@ export default function TaskManager() {
         SetDateFin(Task.DateFin);
         SetRessource(Task.Ressource);
         SetStatus(Task.Status);
+        SetPriorite(Task.Priorite || "Moyenne");
         SetIndexModification(index);
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Recherche et filtres : on conserve l'index original
+    const TachesFiltrees = Tasks
+        .map((tache, index) => ({
+            ...tache,
+            indexOriginal: index
+        }))
+        .filter((tache) =>
+            tache.Title.toLowerCase().includes(
+                Recherche.toLowerCase().trim()
+            )
+        )
+        .filter((tache) =>
+            FiltreStatus === "all" ||
+            tache.Status === FiltreStatus
+        )
+        .filter((tache) => {
+            if (FiltreRetard === "late") {
+                return EstEnRetard(tache);
+            }
+
+            if (FiltreRetard === "not-late") {
+                return !EstEnRetard(tache);
+            }
+
+            return true;
+        });
+
+    // Exporter les tâches en fichier JSON
+    function ExporterTaches() {
+        const contenu = JSON.stringify(Tasks, null, 2);
+        const fichier = new Blob(
+            [contenu],
+            { type: "application/json" }
+        );
+
+        const url = URL.createObjectURL(fichier);
+        const lien = document.createElement("a");
+
+        lien.href = url;
+        lien.download = "mes-taches.json";
+        document.body.appendChild(lien);
+        lien.click();
+        lien.remove();
+
+        URL.revokeObjectURL(url);
+    }
+
+    // Importer les tâches depuis un fichier JSON
+    function ImporterTaches(e) {
+        const fichier = e.target.files?.[0];
+
+        if (!fichier) return;
+
+        const lecteur = new FileReader();
+
+        lecteur.onload = (event) => {
+            try {
+                const donnees = JSON.parse(event.target.result);
+
+                if (
+                    !Array.isArray(donnees) ||
+                    !donnees.every(TacheValide)
+                ) {
+                    throw new Error("Format de fichier invalide.");
+                }
+
+                const tachesImportees = donnees.map(NormaliserTache);
+
+                SetTasks(tachesImportees);
+                AnnulerModification();
+
+                SetRecherche("");
+                SetFiltreStatus("all");
+                SetFiltreRetard("all");
+
+                alert("Importation réussie !");
+            } catch (erreur) {
+                console.error("Erreur d'importation :", erreur);
+                alert(
+                    "Erreur : le fichier JSON est invalide " +
+                    "ou ne contient pas une liste de tâches valide."
+                );
+            }
+        };
+
+        lecteur.onerror = () => {
+            alert("Impossible de lire le fichier.");
+        };
+
+        lecteur.readAsText(fichier);
+
+        // Permet de sélectionner de nouveau le même fichier
+        e.target.value = "";
     }
 
     return (
@@ -259,8 +392,8 @@ export default function TaskManager() {
                             {Tasks.length === 0
                                 ? 0
                                 : Math.round(
-                                      (statut.value / Tasks.length) * 100
-                                  )}
+                                    (statut.value / Tasks.length) * 100
+                                )}
                             % du total
                         </small>
                     </article>
@@ -273,7 +406,7 @@ export default function TaskManager() {
                 </article>
             </section>
 
-            {/* Formulaire et graphique côte à côte */}
+            {/* Formulaire et graphique */}
             <div className="dashboard-grid">
                 <section className="card">
                     <h2>
@@ -343,6 +476,25 @@ export default function TaskManager() {
                                         value={statut.valeur}
                                     >
                                         {statut.nom}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="priorite">Priorité</label>
+                            <select
+                                id="priorite"
+                                value={Priorite}
+                                onChange={(e) => SetPriorite(e.target.value)}
+                                required
+                            >
+                                {priorites.map((priorite) => (
+                                    <option
+                                        key={priorite}
+                                        value={priorite}
+                                    >
+                                        {priorite}
                                     </option>
                                 ))}
                             </select>
@@ -444,8 +596,82 @@ export default function TaskManager() {
                     <h2>Liste des tâches</h2>
 
                     <span className="task-count">
-                        {Tasks.length} tâche(s)
+                        {TachesFiltrees.length} tâche(s) affichée(s) / {Tasks.length}
                     </span>
+                </div>
+
+                {/* Recherche et filtres */}
+                <div className="filters-container">
+                    <div className="form-group">
+                        <label htmlFor="search">
+                            Rechercher par titre
+                        </label>
+                        <input
+                            id="search"
+                            type="text"
+                            placeholder="Saisir le titre..."
+                            value={Recherche}
+                            onChange={(e) => SetRecherche(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="filter-status">
+                            Filtrer par statut
+                        </label>
+                        <select
+                            id="filter-status"
+                            value={FiltreStatus}
+                            onChange={(e) => SetFiltreStatus(e.target.value)}
+                        >
+                            <option value="all">Tous les statuts</option>
+
+                            {statuts.map((statut) => (
+                                <option
+                                    key={statut.valeur}
+                                    value={statut.valeur}
+                                >
+                                    {statut.nom}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="filter-late">
+                            État des échéances
+                        </label>
+                        <select
+                            id="filter-late"
+                            value={FiltreRetard}
+                            onChange={(e) => SetFiltreRetard(e.target.value)}
+                        >
+                            <option value="all">Toutes les tâches</option>
+                            <option value="late">En retard</option>
+                            <option value="not-late">Pas en retard</option>
+                        </select>
+                    </div>
+                </div>
+
+                {/* Import et export */}
+                <div className="import-export-actions">
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={ExporterTaches}
+                    >
+                        Exporter les tâches
+                    </button>
+
+                    <label className="btn btn-secondary import-label">
+                        Importer les tâches
+                        <input
+                            type="file"
+                            accept=".json,application/json"
+                            onChange={ImporterTaches}
+                            hidden
+                        />
+                    </label>
                 </div>
 
                 <div className="table-container">
@@ -457,24 +683,28 @@ export default function TaskManager() {
                                 <th scope="col">Fin</th>
                                 <th scope="col">Ressource</th>
                                 <th scope="col">Statut</th>
+                                <th scope="col">Priorité</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {Tasks.length === 0 ? (
+                            {TachesFiltrees.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="empty-state">
-                                        Aucune tâche. Ajoutez votre première tâche.
+                                    <td colSpan={7} className="empty-state">
+                                        Aucune tâche ne correspond à votre recherche.
                                     </td>
                                 </tr>
                             ) : (
-                                Tasks.map((Task, index) => {
+                                TachesFiltrees.map((Task) => {
+                                    const index = Task.indexOriginal;
+
                                     const statut = statuts.find(
                                         (s) => s.valeur === Task.Status
                                     );
 
                                     const enRetard = EstEnRetard(Task);
+                                    const priorite = Task.Priorite || "Moyenne";
 
                                     return (
                                         <tr
@@ -504,6 +734,14 @@ export default function TaskManager() {
                                                     className={`status-badge ${statut.classe}`}
                                                 >
                                                     {statut.nom}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span
+                                                    className={`priority-badge priority-${priorite.toLowerCase()}`}
+                                                >
+                                                    {priorite}
                                                 </span>
                                             </td>
 
