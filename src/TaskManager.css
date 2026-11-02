@@ -1,6 +1,18 @@
-/* ==================================================
-   BASE
-================================================== */
+
+/* =========================================================
+   TASK MANAGER - CSS
+   Design moderne et responsive
+========================================================= */
+
+:root {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #17243b;
+    background: #f4f6fb;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
 *,
 *::before,
@@ -10,10 +22,9 @@
 
 body {
     margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
     background: #f4f6fb;
-    color: #17243b;
-    font-family: "Segoe UI", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
 }
 
 .task-manager {
@@ -22,12 +33,12 @@ body {
     --text: #17243b;
     --muted: #718096;
     --border: #e6ebf3;
-    --radius: 22px;
-    --shadow: 0 8px 30px rgba(31, 43, 79, 0.045);
+    --radius: 20px;
+    --shadow: 0 8px 30px rgba(31, 43, 79, 0.055);
 
     width: min(1440px, 94%);
     margin: 0 auto;
-    padding: 48px 0 56px;
+    padding: 42px 0 56px;
 }
 
 .task-manager button,
@@ -45,22 +56,19 @@ body {
     color: #312e81;
 }
 
-/* ==================================================
-   EN-TÊTE
-================================================== */
+/* ==================== EN-TÊTE ==================== */
 
 .task-manager .page-header {
     position: relative;
-    margin-bottom: 32px;
+    margin-bottom: 30px;
     padding: 8px 0 8px 22px;
-    text-align: left;
 }
 
 .task-manager .page-header::before {
     content: "";
     position: absolute;
-    top: 10px;
-    bottom: 10px;
+    top: 8px;
+    bottom: 8px;
     left: 0;
     width: 5px;
     border-radius: 10px;
@@ -68,79 +76,104 @@ body {
 }
 
 .task-manager .page-header h1 {
-    margin: 0 0 12px;
-    color: #17243b;
+    margin: 0 0 10px;
+    color: var(--text);
     font-size: clamp(27px, 3.3vw, 42px);
     font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -1.3px;
+    letter-spacing: -1.2px;
 }
 
 .task-manager .page-header p {
     max-width: 680px;
     margin: 0;
-    color: #718096;
+    color: var(--muted);
     font-size: 15px;
-    line-height: 1.8;
+    line-height: 1.7;
 }
 
-/* ==================================================
-   KPI
-================================================== */
+/* ==================== MESSAGES ==================== */
+
+.task-manager .storage-error {
+    margin: 0 0 22px;
+    padding: 15px 18px;
+    border: 1px solid #fecdd3;
+    border-left: 4px solid #e54862;
+    border-radius: 12px;
+    background: #fff1f3;
+    color: #a72845;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.task-manager .empty-state {
+    padding: 38px 20px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    text-align: center;
+}
+
+.task-manager .dashboard-grid .empty-state {
+    display: grid;
+    min-height: 240px;
+    place-items: center;
+    margin: 0;
+    border: 1px dashed #dce3f0;
+    border-radius: 14px;
+    background: #fafbfe;
+}
+
+/* ==================== CARTES KPI ==================== */
 
 .task-manager .kpi-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 18px;
-    margin-bottom: 28px;
+    gap: 16px;
+    margin-bottom: 26px;
 }
 
 .task-manager .kpi-card {
     --kpi-color: #6366f1;
-
     position: relative;
+    isolation: isolate;
     display: flex;
+    min-width: 0;
+    min-height: 170px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
-    min-width: 0;
-    min-height: 185px;
+    gap: 13px;
     overflow: hidden;
-    isolation: isolate;
-    padding: 25px;
+    padding: 23px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: #fff;
     box-shadow: var(--shadow);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
-/* Accent coloré au-dessus de la carte */
 .task-manager .kpi-card::before {
     content: "";
     position: absolute;
     top: 0;
-    right: 24px;
-    left: 24px;
+    right: 22px;
+    left: 22px;
     height: 3px;
     border-radius: 0 0 8px 8px;
     background: var(--kpi-color);
 }
 
-/* Décoration discrète */
 .task-manager .kpi-card::after {
     content: "";
     position: absolute;
     z-index: -1;
-    right: -25px;
-    bottom: -40px;
+    right: -28px;
+    bottom: -45px;
     width: 125px;
     height: 125px;
-    border: 22px solid var(--kpi-color);
+    border: 20px solid var(--kpi-color);
     border-radius: 50%;
-    opacity: 0.055;
+    opacity: .055;
     pointer-events: none;
 }
 
@@ -153,34 +186,33 @@ body {
 
 .task-manager .kpi-card > strong {
     color: var(--text);
-    font-size: clamp(34px, 3vw, 46px);
+    font-size: clamp(32px, 3vw, 44px);
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -2px;
+    letter-spacing: -1.5px;
     font-variant-numeric: tabular-nums;
 }
 
 .task-manager .kpi-card > small {
     margin-top: auto;
-    color: #718096;
+    color: var(--muted);
     font-size: 11px;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
-/* Carte principale */
 .task-manager .kpi-total {
-    background: linear-gradient(135deg, #4338ca, #6366f1);
     border-color: transparent;
-    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.18);
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, .18);
 }
 
 .task-manager .kpi-total::before {
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255,255,255,.5);
 }
 
 .task-manager .kpi-total::after {
     border-color: #fff;
-    opacity: 0.12;
+    opacity: .12;
 }
 
 .task-manager .kpi-total > span,
@@ -192,12 +224,10 @@ body {
     color: #e0e7ff;
 }
 
-/* Carte des retards */
 .task-manager .kpi-late {
     --kpi-color: #e54862;
-
-    background: linear-gradient(145deg, #fff, #fff1f3);
     border-color: #f7dce2;
+    background: linear-gradient(145deg, #fff, #fff1f3);
 }
 
 .task-manager .kpi-late > span,
@@ -209,22 +239,20 @@ body {
     color: #985368;
 }
 
-/* ==================================================
-   STRUCTURE ET CARTES
-================================================== */
+/* ==================== STRUCTURE / CARTES ==================== */
 
 .task-manager .dashboard-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     align-items: stretch;
-    gap: 26px;
-    margin-bottom: 28px;
+    gap: 22px;
+    margin-bottom: 26px;
 }
 
 .task-manager .card {
     min-width: 0;
-    margin-bottom: 28px;
-    padding: 30px;
+    margin-bottom: 26px;
+    padding: 27px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: #fff;
@@ -236,29 +264,27 @@ body {
 }
 
 .task-manager h2 {
-    margin: 0 0 26px;
+    margin: 0 0 22px;
     color: var(--text);
     font-size: 18px;
     font-weight: 750;
     line-height: 1.4;
-    letter-spacing: -0.4px;
+    letter-spacing: -.35px;
 }
 
-/* ==================================================
-   FORMULAIRE
-================================================== */
+/* ==================== FORMULAIRE ==================== */
 
 .task-manager .task-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px 20px;
+    gap: 19px 17px;
 }
 
 .task-manager .form-group {
     display: flex;
-    flex-direction: column;
-    gap: 9px;
     min-width: 0;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .task-manager .full-width {
@@ -269,7 +295,7 @@ body {
     color: #445169;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.15px;
+    letter-spacing: .1px;
 }
 
 .task-manager input,
@@ -277,22 +303,20 @@ body {
     display: block;
     width: 100%;
     min-width: 0;
-    min-height: 49px;
-    padding: 12px 14px;
+    min-height: 46px;
+    padding: 11px 13px;
     border: 1px solid #e1e7f0;
-    border-radius: 12px;
-    background-color: #f8fafd;
+    border-radius: 11px;
+    outline: 2px solid transparent;
+    background: #f8fafd;
     color: #26344b;
     font-size: 14px;
     line-height: 1.5;
-    transition:
-        border-color 0.18s ease,
-        box-shadow 0.18s ease,
-        background-color 0.18s ease;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
 }
 
 .task-manager input::placeholder {
-    color: #7b889c;
+    color: #8995a8;
     font-size: 13px;
 }
 
@@ -303,10 +327,10 @@ body {
 
 .task-manager input:focus,
 .task-manager select:focus {
-    outline: 2px solid transparent;
     border-color: #8179ed;
-    background-color: #fff;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.11);
+    outline: 2px solid transparent;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .11);
 }
 
 .task-manager input[type="date"] {
@@ -317,12 +341,11 @@ body {
     cursor: pointer;
 }
 
-/* ==================================================
-   BOUTONS
-================================================== */
+/* ==================== BOUTONS ==================== */
 
 .task-manager .form-actions,
-.task-manager .table-actions {
+.task-manager .table-actions,
+.task-manager .import-export-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -330,29 +353,26 @@ body {
 }
 
 .task-manager .form-actions {
-    margin-top: 5px;
-    padding-top: 22px;
+    margin-top: 4px;
+    padding-top: 20px;
     border-top: 1px solid #edf1f7;
 }
 
 .task-manager .btn {
     display: inline-flex;
+    min-height: 40px;
     align-items: center;
     justify-content: center;
-    min-height: 42px;
-    padding: 11px 17px;
+    padding: 10px 15px;
     border: 1px solid transparent;
-    border-radius: 10px;
+    border-radius: 9px;
     font-size: 13px;
     font-weight: 650;
     line-height: 1.4;
     text-align: center;
+    text-decoration: none;
     cursor: pointer;
-    transition:
-        background-color 0.18s ease,
-        border-color 0.18s ease,
-        box-shadow 0.18s ease,
-        transform 0.18s ease;
+    transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
 .task-manager .btn:focus-visible {
@@ -365,22 +385,22 @@ body {
 }
 
 .task-manager .btn-primary {
-    min-height: 46px;
-    padding-inline: 21px;
+    min-height: 44px;
+    padding-inline: 19px;
     background: #4f46e5;
     color: #fff;
-    box-shadow: 0 5px 12px rgba(79, 70, 229, 0.17);
+    box-shadow: 0 5px 12px rgba(79, 70, 229, .16);
 }
 
 .task-manager .btn-primary:hover {
     background: #4338ca;
-    box-shadow: 0 7px 16px rgba(79, 70, 229, 0.23);
+    box-shadow: 0 7px 16px rgba(79, 70, 229, .22);
 }
 
 .task-manager .btn-secondary {
+    border-color: #e3e9f2;
     background: #f1f4f9;
     color: #526078;
-    border-color: #e3e9f2;
 }
 
 .task-manager .btn-secondary:hover {
@@ -393,8 +413,8 @@ body {
 }
 
 .task-manager .btn-edit:hover {
-    background: #e0e7ff;
     border-color: #c7d2fe;
+    background: #e0e7ff;
 }
 
 .task-manager .btn-delete {
@@ -403,19 +423,60 @@ body {
 }
 
 .task-manager .btn-delete:hover {
-    background: #ffe4e6;
     border-color: #fecdd3;
+    background: #ffe4e6;
 }
 
 .task-manager .btn:disabled {
-    opacity: 0.5;
+    opacity: .5;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-/* ==================================================
-   GRAPHIQUE ET AVANCEMENT
-================================================== */
+/* ==================== RECHERCHE / FILTRES ==================== */
+
+.task-manager .filters-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    padding: 18px;
+    border: 1px solid #e9edf7;
+    border-radius: 14px;
+    background: #f8faff;
+}
+
+.task-manager .filters-container .form-group {
+    gap: 7px;
+}
+
+.task-manager .filters-container input,
+.task-manager .filters-container select {
+    min-height: 43px;
+    background: #fff;
+}
+
+/* ==================== IMPORT / EXPORT JSON ==================== */
+
+.task-manager .import-export-actions {
+    justify-content: flex-end;
+    margin: 16px 0 18px;
+}
+
+.task-manager .import-export-actions .btn {
+    min-height: 42px;
+}
+
+.task-manager .import-label {
+    position: relative;
+    cursor: pointer;
+}
+
+.task-manager .import-label input[type="file"] {
+    display: none;
+}
+
+/* ==================== GRAPHIQUE ==================== */
 
 .task-manager .chart-container {
     width: 100%;
@@ -433,18 +494,20 @@ body {
 }
 
 .task-manager .chart-container .recharts-default-tooltip {
-    padding: 12px 16px !important;
-    border: 1px solid #e6ebf3 !important;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+    padding: 11px 14px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 11px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .1);
     font-size: 13px;
 }
 
+/* ==================== AVANCEMENT ==================== */
+
 .task-manager .completion-block {
-    margin-top: 20px;
-    padding: 20px;
+    margin-top: 18px;
+    padding: 18px;
     border: 1px solid #e9edf7;
-    border-radius: 14px;
+    border-radius: 13px;
     background: #f8faff;
 }
 
@@ -453,14 +516,14 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 13px;
+    margin-bottom: 12px;
     color: #526078;
     font-size: 12px;
     font-weight: 650;
 }
 
 .task-manager .completion-heading strong {
-    color: #4f46e5;
+    color: var(--primary);
     font-size: 18px;
     font-variant-numeric: tabular-nums;
 }
@@ -471,15 +534,14 @@ body {
     height: 9px;
     overflow: hidden;
     appearance: none;
-    border: none;
+    border: 0;
     border-radius: 20px;
     background: #e5eaf5;
-    accent-color: #6366f1;
 }
 
 .task-manager .completion-progress::-webkit-progress-bar {
-    background: #e5eaf5;
     border-radius: 20px;
+    background: #e5eaf5;
 }
 
 .task-manager .completion-progress::-webkit-progress-value {
@@ -493,23 +555,21 @@ body {
 }
 
 .task-manager .completion-block p {
-    margin: 11px 0 0;
-    color: #718096;
+    margin: 10px 0 0;
+    color: var(--muted);
     font-size: 11px;
     line-height: 1.6;
 }
 
-/* ==================================================
-   EN-TÊTE DU TABLEAU
-================================================== */
+/* ==================== EN-TÊTE DU TABLEAU ==================== */
 
 .task-manager .section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 14px;
-    margin-bottom: 24px;
+    gap: 12px;
+    margin-bottom: 18px;
 }
 
 .task-manager .section-header h2 {
@@ -520,7 +580,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 13px;
+    padding: 8px 12px;
     border: 1px solid #e0e7ff;
     border-radius: 30px;
     background: #f3f5ff;
@@ -537,15 +597,13 @@ body {
     background: #6366f1;
 }
 
-/* ==================================================
-   TABLEAU
-================================================== */
+/* ==================== TABLEAU DES TÂCHES ==================== */
 
 .task-manager .table-container {
     width: 100%;
     overflow-x: auto;
     border: 1px solid #e9edf4;
-    border-radius: 14px;
+    border-radius: 13px;
     scrollbar-width: thin;
     scrollbar-color: #c7d0e1 #f6f8fc;
 }
@@ -565,47 +623,47 @@ body {
 
 .task-manager .task-table {
     width: 100%;
-    min-width: 840px;
+    min-width: 850px;
     border-collapse: separate;
     border-spacing: 0;
     text-align: left;
 }
 
 .task-manager .task-table th {
-    padding: 17px 18px;
+    padding: 15px 16px;
     border-bottom: 1px solid #e6ebf3;
     background: #f7f9fc;
     color: #718096;
     font-size: 10px;
     font-weight: 750;
     line-height: 1.5;
-    letter-spacing: 1px;
+    letter-spacing: .8px;
     text-transform: uppercase;
     white-space: nowrap;
 }
 
 .task-manager .task-table td {
-    padding: 18px;
+    padding: 16px;
     border-bottom: 1px solid #edf1f7;
     color: #536078;
     font-size: 13px;
     line-height: 1.6;
     vertical-align: middle;
     overflow-wrap: anywhere;
-    transition: background-color 0.16s ease;
+    transition: background-color .16s ease;
 }
 
 .task-manager .task-table tbody tr:last-child td {
-    border-bottom: none;
+    border-bottom: 0;
 }
 
 .task-manager .task-table tbody tr:hover td {
-    background-color: #f9faff;
+    background: #f9faff;
 }
 
 .task-manager .task-table th:first-child,
 .task-manager .task-table td:first-child {
-    padding-left: 22px;
+    padding-left: 20px;
 }
 
 .task-manager .task-table td:nth-child(2),
@@ -627,21 +685,26 @@ body {
 }
 
 .task-manager .table-actions .btn {
-    min-height: 36px;
-    padding: 8px 12px;
+    min-height: 35px;
+    padding: 7px 10px;
     font-size: 11px;
     white-space: nowrap;
 }
 
-/* ==================================================
-   BADGES DE STATUT
-================================================== */
+.task-manager .task-table td.empty-state {
+    padding: 48px 20px;
+    color: var(--muted);
+    text-align: center;
+}
 
-.task-manager .status-badge {
+/* ==================== BADGES DE STATUT ==================== */
+
+.task-manager .status-badge,
+.task-manager .priority-badge {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 6px 11px;
+    padding: 6px 10px;
     border: 1px solid transparent;
     border-radius: 30px;
     font-size: 11px;
@@ -660,31 +723,53 @@ body {
 }
 
 .task-manager .status-badge.todo {
-    background: #eff6ff;
     border-color: #dbeafe;
+    background: #eff6ff;
     color: #2563a6;
 }
 
 .task-manager .status-badge.progress {
-    background: #fffbeb;
     border-color: #fef0c7;
+    background: #fffbeb;
     color: #986b0a;
 }
 
 .task-manager .status-badge.done {
-    background: #ecfdf5;
     border-color: #d1fae5;
+    background: #ecfdf5;
     color: #16734e;
 }
 
-/* ==================================================
-   RETARDS
-================================================== */
+/* ==================== BADGES DE PRIORITÉ ==================== */
+
+.task-manager .priority-badge {
+    gap: 6px;
+}
+
+.task-manager .priority-basse {
+    border-color: #bbf7d0;
+    background: #ecfdf3;
+    color: #167344;
+}
+
+.task-manager .priority-moyenne {
+    border-color: #fde68a;
+    background: #fffbeb;
+    color: #956500;
+}
+
+.task-manager .priority-haute {
+    border-color: #fecaca;
+    background: #fff1f2;
+    color: #be123c;
+}
+
+/* ==================== TÂCHES EN RETARD ==================== */
 
 .task-manager .task-table tbody tr.task-overdue td {
+    border-bottom-color: #f7e4e8;
     background: #fff5f6;
     color: #a24358;
-    border-bottom-color: #f7e4e8;
 }
 
 .task-manager .task-table tbody tr.task-overdue:hover td {
@@ -707,7 +792,7 @@ body {
 .task-manager .overdue-badge {
     display: inline-flex;
     align-items: center;
-    margin: 4px 0 4px 8px;
+    margin: 4px 0 4px 7px;
     padding: 3px 8px;
     border: 1px solid #fecdd3;
     border-radius: 6px;
@@ -715,88 +800,26 @@ body {
     color: #ad2342;
     font-size: 9px;
     font-weight: 750;
-    letter-spacing: 0.3px;
+    letter-spacing: .2px;
     white-space: nowrap;
 }
 
-/* ==================================================
-   ÉTATS VIDES ET ERREURS
-================================================== */
-
-.task-manager .empty-state {
-    padding: 48px 24px;
-    color: #718096;
-    font-size: 14px;
-    line-height: 1.8;
-    text-align: center;
-}
-
-.task-manager .dashboard-grid .empty-state {
-    display: grid;
-    place-items: center;
-    min-height: 240px;
-    margin: 0;
-    border: 1px dashed #dce3f0;
-    border-radius: 14px;
-    background: #fafbfe;
-}
-
-.task-manager .task-table td.empty-state {
-    padding: 55px 24px;
-    color: #718096;
-    text-align: center;
-}
-
-.task-manager .storage-error {
-    margin: 0 0 24px;
-    padding: 16px 20px;
-    border: 1px solid #fecdd3;
-    border-left: 4px solid #e54862;
-    border-radius: 12px;
-    background: #fff1f3;
-    color: #a72845;
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-/* ==================================================
-   INTERACTIONS
-================================================== */
+/* ==================== SURVOL ==================== */
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .task-manager .kpi-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 14px 32px rgba(31, 43, 79, 0.09);
+        box-shadow: 0 14px 32px rgba(31, 43, 79, .09);
     }
 
     .task-manager .kpi-total:hover {
-        box-shadow: 0 16px 30px rgba(79, 70, 229, 0.25);
+        box-shadow: 0 16px 30px rgba(79, 70, 229, .25);
     }
 }
 
-/* ==================================================
-   ÉCRANS MOYENS
-================================================== */
+/* ==================== TABLETTES ==================== */
 
-@media (max-width: 1200px) {
-    .task-manager .kpi-grid {
-        gap: 13px;
-    }
-
-    .task-manager .kpi-card {
-        padding: 20px;
-    }
-
-    .task-manager .card {
-        padding: 24px;
-    }
-
-    .task-manager .dashboard-grid {
-        gap: 20px;
-    }
-}
-
-@media (max-width: 1050px) {
+@media (max-width: 1100px) {
     .task-manager .kpi-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -810,24 +833,22 @@ body {
     }
 }
 
-/* ==================================================
-   TABLETTES ET TÉLÉPHONES
-================================================== */
+/* ==================== TÉLÉPHONES ==================== */
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
     .task-manager {
         width: 93%;
         padding: 28px 0 36px;
     }
 
     .task-manager .page-header {
-        margin-bottom: 24px;
+        margin-bottom: 23px;
         padding-left: 17px;
     }
 
     .task-manager .page-header h1 {
         font-size: 29px;
-        letter-spacing: -0.8px;
+        letter-spacing: -.7px;
     }
 
     .task-manager .page-header p {
@@ -837,51 +858,48 @@ body {
     .task-manager .kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
-        margin-bottom: 20px;
     }
 
     .task-manager .kpi-card {
-        min-height: 155px;
-        padding: 20px;
-        border-radius: 17px;
+        min-height: 150px;
+        padding: 19px;
+        border-radius: 16px;
     }
 
     .task-manager .kpi-total {
         grid-column: 1 / -1;
-        min-height: 145px;
+        min-height: 135px;
     }
 
     .task-manager .kpi-card > strong {
-        font-size: 36px;
-    }
-
-    .task-manager .kpi-card > span {
-        font-size: 12px;
+        font-size: 35px;
     }
 
     .task-manager .card {
         margin-bottom: 20px;
-        padding: 21px;
-        border-radius: 18px;
+        padding: 20px;
+        border-radius: 17px;
     }
 
     .task-manager .dashboard-grid {
-        gap: 20px;
+        gap: 18px;
         margin-bottom: 20px;
-    }
-
-    .task-manager h2 {
-        font-size: 17px;
     }
 
     .task-manager .task-form {
         grid-template-columns: 1fr;
-        gap: 18px;
+        gap: 17px;
     }
 
     .task-manager input,
     .task-manager select {
         font-size: 16px;
+    }
+
+    .task-manager .filters-container {
+        grid-template-columns: 1fr;
+        gap: 13px;
+        padding: 15px;
     }
 
     .task-manager .form-actions {
@@ -891,20 +909,30 @@ body {
 
     .task-manager .form-actions .btn {
         width: 100%;
-        min-height: 46px;
+        min-height: 45px;
+    }
+
+    .task-manager .import-export-actions {
+        justify-content: stretch;
+    }
+
+    .task-manager .import-export-actions .btn {
+        flex: 1 1 180px;
     }
 
     .task-manager .table-actions .btn {
-        min-height: 44px;
-        padding-inline: 14px;
+        min-height: 40px;
+        padding-inline: 11px;
     }
 
     .task-manager .chart-container {
-        height: 280px;
+        height: 275px;
     }
 }
 
-@media (max-width: 380px) {
+/* ==================== PETITS TÉLÉPHONES ==================== */
+
+@media (max-width: 390px) {
     .task-manager .page-header h1 {
         font-size: 25px;
     }
@@ -913,8 +941,8 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .task-manager .kpi-card {
-        min-height: 145px;
+    .task-manager .kpi-total {
+        grid-column: auto;
     }
 
     .task-manager .card {
@@ -922,13 +950,16 @@ body {
     }
 
     .task-manager .completion-block {
-        padding: 15px;
+        padding: 14px;
+    }
+
+    .task-manager .section-header {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 
-/* ==================================================
-   ACCESSIBILITÉ : MOUVEMENTS RÉDUITS
-================================================== */
+/* ==================== ACCESSIBILITÉ ==================== */
 
 @media (prefers-reduced-motion: reduce) {
     .task-manager *,
